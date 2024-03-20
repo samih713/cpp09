@@ -1,0 +1,25 @@
+# Reset
+Color_Off=`tput sgr0`
+
+# Regular Colors
+Black=`tput setaf 0` # Black
+Red=`tput setaf 1` # Red
+Green=`tput setaf 2` # Green
+Yellow=`tput setaf 3` # Yellow
+Blue=`tput setaf 4` # Blue
+Purple=`tput setaf 5` # Purple
+Cyan=`tput setaf 6` # Cyan
+White=`tput setaf 7` # White
+
+# Bold Color
+Bold=`tput bold`
+
+# High Intensity Color
+IBlack="\033[1;90m" # Black
+IRed="\033[1;91m" # Red
+IGreen=`tput setaf 2` # Green
+IYellow="\033[1;93m" # Yellow
+IBlue="\033[1;94m" # Blue
+IPurple="\033[1;95m" # Purple
+ICyan="\033[1;96m" # Cyan
+IWhite="\033[1;97m" # White

@@ -1,0 +1,57 @@
+-include ../.colors
+
+CXX:= c++
+CXXFLAGS:= -Wall -Werror -Wextra -std=c++98 
+DEBUG_FLAGS:= -DDEBUG -ggdb3
+
+RM:= rm -rf
+
+INCLUDES:= -I./includes
+
+SRCS_DIR:= srcs/
+
+OBJS_DIR:= objs
+OBJS:= $(SRCS:%.cpp=$(OBJS_DIR)/%.o)
+
+DEPFLAGS:= -MMD -MP
+DEPS_DIR:=deps
+DEPS:=*/*.d
+
+all: $(NAME)
+
+run: $(NAME)
+	./$(NAME)
+
+debug: CXXFLAGS += $(DEBUG_FLAGS) 
+debug: run
+
+sanitize: CXXFLAGS += $(DEBUG_FLAGS) -fsanitize=address
+sanitize: run
+
+$(NAME): $(OBJS)
+	@$(CXX) $(CXXFLAGS) $(DEPFLAGS) $(INCLUDES) -o $@ $^
+	@echo $(Bold) $(Green) [ $@ ] is ready. $(Color_Off)
+	@mv $(DEPS) $(DEPS_DIR) 2>/dev/null; true
+
+$(OBJS_DIR)/%.o: $(SRCS_DIR)%.cpp | $(OBJS_DIR) $(DEPS_DIR)
+	@$(CXX) $(CXXFLAGS) $(DEPFLAGS) $(INCLUDES) -c $^ -o $@
+	@echo $(Bold) $(Yellow) [ $(notdir $@) ] compiled. $(Color_Off)
+
+$(OBJS_DIR): ; @mkdir -p $@
+$(DEPS_DIR): ; @mkdir -p $@
+
+clean:
+	@$(foreach dir,$(OBJS_DIR) $(DEPS_DIR),\
+	if [ -d $(dir) ]; then \
+		$(RM) $(dir) && echo "$(Red) [ $(dir) ] removed.$(Color_Off)"; \
+	fi;)
+
+fclean: clean
+	@if [ -f $(NAME) ]; then \
+		$(RM) $(NAME); \
+		echo $(Bold) $(Red) [ $(NAME) ] removed. $(Color_Off); \
+	fi;
+
+re: fclean all
+
+.PHONY: clean fclean all re
