@@ -1,12 +1,19 @@
 #include "Date.hpp"
-#include <sstream>
 #include <exception>
+#include <sstream>
 
-using std::runtime_error;
 using std::istringstream;
+using std::runtime_error;
 
 /* ------------------------ Construction/Destruction ----------------------- */
-Date::Date(const string &date, char dateDelim) : _dateDelim(dateDelim)
+
+/* @brief Date constructor
+ *
+ * @param date as a string
+ *
+ * @throw runtime_error if invalid date format
+ */
+Date::Date (const string &date) : isLeap(false), year(0), month(0), day(0)
 {
 	istringstream dateStream (date);
 
@@ -16,46 +23,44 @@ Date::Date(const string &date, char dateDelim) : _dateDelim(dateDelim)
 	dateStream >> std::noskipws;
 	dateStream >> year >> del1 >> month >> del2 >> day;
 
-	// check for stream errors
 	if (dateStream.fail () || dateStream.bad ())
-		throw runtime_error("Invalid date format");
-	// check for date delimeters
-	if (del1 != _dateDelim || del2 != _dateDelim)
-		throw runtime_error("Invalid date format");
+		throw runtime_error ("(stream) Invalid date format");
+
+	if (del1 != dateDelim || del2 != dateDelim)
+		throw runtime_error ("(delim) Invalid date format");
 
 	isLeap = isLeapYear (year);
+
+	if (!this->validate_date ())
+		throw runtime_error ("(validation) Invalid date format");
 }
 
-Date::~Date()
+Date::~Date ()
 {
 }
 
-Date::Date(const Date &other) : year(other.year), month(other.month), day(other.day), _dateDelim(other._dateDelim)
+Date::Date (const Date &other)
+	: year (other.year), month (other.month), day (other.day)
 {
-
 }
 
-Date &Date::operator=(const Date &other)
+Date &Date::operator= (const Date &other)
 {
 	if (this != &other)
 	{
-		year = other.year;
+		year  = other.year;
 		month = other.month;
-		day = other.day;
-		_dateDelim = other._dateDelim;
+		day	  = other.day;
 	}
 	return *this;
 }
 
 /* ---------------------------- Member functions --------------------------- */
-enum {
-	JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC
-};
 
 /* @brief Validate the date
  *
  * @return true if the date is valid, false otherwise
-*/
+ */
 bool Date::validate_date ()
 {
 	// validate month
@@ -87,96 +92,121 @@ bool Date::validate_date ()
  * @param year the year to check
  *
  * @return true if the year is a leap year, false otherwise
-*/
+ */
 inline bool Date::isLeapYear (int year)
 {
 	return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 }
 
-double Date::get_year() const
+double Date::get_year () const
 {
 	return year;
 }
 
-double Date::get_month() const
+double Date::get_month () const
 {
 	return month;
 }
 
-double Date::get_day() const
+double Date::get_day () const
 {
 	return day;
 }
 
-double Date::get_delim() const
+Date &Date::operator-- ()
 {
-	return _dateDelim;
-}
-
-Date &Date::operator--() {
-	if (day == 1) {
-		if (month == 1) {
+	if (day == 1)
+	{
+		if (month == 1)
+		{
 			year--;
 			month = 12;
-			day = 31;
-		} else {
+			day	  = 31;
+		}
+		else
+		{
 			month--;
-			switch (month) {
-			case 2:
-				day = isLeap ? 29 : 28;
-				break;
+			switch (month)
+			{
+			case 2: day = isLeap ? 29 : 28; break;
 			case 4:
 			case 6:
 			case 9:
-			case 11:
-				day = 30;
-				break;
-			default:
-				day = 31;
+			case 11: day = 30; break;
+			default: day = 31;
 			}
 		}
-	} else {
+	}
+	else
+	{
 		day--;
 	}
 	return *this;
 }
 
-bool Date::operator>(const Date &date) const{
-	if (year > date.get_year())
-		return true;
-	if (year < date.get_year())
-		return false;
-	if (month > date.get_month())
-		return true;
-	if (month < date.get_month())
-		return false;
-	if (day > date.get_day())
-		return true;
+// comparisons
+bool Date::operator> (const Date &date) const
+{
+	if (year > date.get_year ()) return true;
+	else return false;
+
+	if (month > date.get_month ()) return true;
+	else return false;
+
+	if (day > date.get_day ()) return true;
 	return false;
 }
 
-bool Date::operator<(const Date &date) const{
-	if (year < date.get_year())
-		return true;
-	if (year > date.get_year())
-		return false;
-	if (month < date.get_month())
-		return true;
-	if (month > date.get_month())
-		return false;
-	if (day < date.get_day())
-		return true;
+bool Date::operator> (const string &date) const
+{
+	Date dateObj (date);
+	return (*this > dateObj);
+}
+
+bool Date::operator< (const Date &date) const
+{
+	if (year < date.get_year ()) return true;
+	else return false;
+
+	if (month < date.get_month ()) return true;
+	else return false;
+
+	if (day < date.get_day ()) return true;
 	return false;
 }
 
-std::ostream &operator<<(std::ostream &os, const Date &date) {
-	os << date.get_year() << date.get_delim() << date.get_month() << date.get_delim() << date.get_day();
+bool Date::operator< (const string &date) const
+{
+	Date dateObj (date);
+	return (*this < dateObj);
+}
+
+bool Date::operator== (const Date &date) const
+{
+	if (year != date.year) return false;
+	if (month != date.month) return false;
+	if (day != date.day) return false;
+	return true;
+}
+
+bool Date::operator== (const string &date) const
+{
+	Date dateObj (date);
+	return (*this == dateObj);
+}
+
+// stream operations
+std::ostream &operator<< (std::ostream &os, const Date &date)
+{
+	os << date.get_year () << dateDelim << date.get_month () << dateDelim
+	   << date.get_day ();
 	return os;
 }
 
-std::string &operator<<(std::string &s, const Date &date) {
+std::string &operator<< (std::string &s, const Date &date)
+{
 	std::ostringstream os;
 	os << date;
-	s = os.str();
+	s = os.str ();
 	return s;
 }
