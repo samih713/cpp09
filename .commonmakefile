@@ -1,7 +1,7 @@
 -include ../.colors
 
 CXX:= c++
-CXXFLAGS:= -Wall -Werror -Wextra -std=c++98 
+CXXFLAGS:= -Wall -Werror -Wextra -std=c++98
 DEBUG_FLAGS:= -DDEBUG -ggdb3
 
 RM:= rm -rf
@@ -22,7 +22,7 @@ all: $(NAME)
 run: $(NAME)
 	./$(NAME)
 
-debug: CXXFLAGS += $(DEBUG_FLAGS) 
+debug: CXXFLAGS += $(DEBUG_FLAGS)
 debug: run
 
 sanitize: CXXFLAGS += $(DEBUG_FLAGS) -fsanitize=address
@@ -35,7 +35,7 @@ $(NAME): $(OBJS)
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)%.cpp | $(OBJS_DIR) $(DEPS_DIR)
 	@$(CXX) $(CXXFLAGS) $(DEPFLAGS) $(INCLUDES) -c $^ -o $@
-	@echo $(Bold) $(Yellow) [ $(notdir $@) ] compiled. $(Color_Off)
+	@echo $(Yellow) [ $(notdir $@) ] compiled. $(Color_Off)
 
 $(OBJS_DIR): ; @mkdir -p $@
 $(DEPS_DIR): ; @mkdir -p $@
