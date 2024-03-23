@@ -1,5 +1,5 @@
-#include "Date.hpp"
 #include "BitcoinExchange.hpp"
+#include "Date.hpp"
 #include <sstream>
 #include <stdexcept>
 #include <utility>
@@ -10,8 +10,8 @@ using std::runtime_error;
 
 void BitcoinExchange::load_price_map (const char *priceDBFile)
 {
-	const string headerLine ("date,exchange_rate");
-	static ifstream		priceDB (priceDBFile, std::ios_base::in);
+	const string	headerLine ("date,exchange_rate");
+	static ifstream priceDB (priceDBFile, std::ios_base::in);
 
 	if (!priceDB.good ())
 		throw runtime_error ("Failed to open price database");
@@ -23,18 +23,18 @@ void BitcoinExchange::load_price_map (const char *priceDBFile)
 
 	std::pair<pmap::iterator, bool> ret;
 
+	std::getline (priceDB, line);
+	if (line != headerLine)
+    throw runtime_error("Invalid header line");
+
 	while (std::getline (priceDB, line)) // get the line
 	{
-		if (line == headerLine) continue;
-
 		comma = line.find_first_of (" , ", 0);
 		if (comma == string::npos)
 			throw runtime_error ("Invalid date/price format");
-		else // validate day
+		else
 		{
-			Date dateObj(line.substr (0, comma));
-			if (!dateObj.validate_date ())
-				throw runtime_error ("Invalid date");
+			Date dateObj (line.substr (0, comma));
 			date << dateObj;
 		}
 		// validate the price
@@ -44,7 +44,7 @@ void BitcoinExchange::load_price_map (const char *priceDBFile)
 			throw runtime_error ("Date [" + date + "] Invalid price format");
 		// if all's good add it to the map
 		ret = priceMap.insert (std::make_pair (date, price));
-		if (ret.second == false) throw runtime_error ("Date [" + date + "] already exists");
+		if (ret.second == false)
+			throw runtime_error ("Date [" + date + "] already exists");
 	}
 }
-

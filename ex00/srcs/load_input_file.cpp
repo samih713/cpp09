@@ -34,7 +34,7 @@ void BitcoinExchange::load_input_file (const char *inputFile)
 	// open the file
 	static ifstream		inputDB(inputFile, std::ios_base::in);
 	if (!inputDB.good ())
-		throw runtime_error ("Failed to open value database");
+		throw runtime_error ("Failed to open input database");
 
 	// header line
 	std::getline (inputDB, line);
@@ -54,10 +54,8 @@ void BitcoinExchange::load_input_file (const char *inputFile)
 			else {
 				try {
 					Date dateObj(date);
-					if (!dateObj.validate_date ())
-						set_error_value(date, value, "Error: bad input => " + date);
 				}
-				catch (...) {
+				catch (const runtime_error &e) {
 					set_error_value(date, value, "Error: bad input => " + date);
 				}
 			}

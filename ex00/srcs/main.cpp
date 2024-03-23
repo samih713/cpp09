@@ -1,7 +1,7 @@
 #include "BitcoinExchange.hpp"
 #include <iostream>
 
-static const char *priceDBFile = "/Users/sabdelra/Desktop/current_projects/cpp/cpp09/ex00/data.csv";
+static const char *priceDBFile = "./data.csv";
 
 int main (int argc, char **argv)
 {
