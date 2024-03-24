@@ -1,19 +1,14 @@
 #include "Date.hpp"
-#include <exception>
 #include <sstream>
 
 using std::istringstream;
 using std::runtime_error;
 
-/* ------------------------ Construction/Destruction ----------------------- */
-
-/* @brief Date constructor
- *
- * @param date as a string
- *
- * @throw runtime_error if invalid date format
- */
-Date::Date (const string &date) : isLeap(false), year(0), month(0), day(0)
+/**
+ * @brief Constructs a Date object with the specified date.
+ * @param date The date in the format "YYYY-MM-DD".
+*/
+Date::Date (const string &date) : isLeap (false), year (0), month (0), day (0)
 {
 	istringstream dateStream (date);
 
@@ -55,17 +50,149 @@ Date &Date::operator= (const Date &other)
 	return *this;
 }
 
-/* ---------------------------- Member functions --------------------------- */
 
-/* @brief Validate the date
- *
- * @return true if the date is valid, false otherwise
- */
+
+/* ------------------------------------------------------------------------- */
+/*                             operator overload                             */
+/* ------------------------------------------------------------------------- */
+
+Date &Date::operator-- ()
+{
+	if (day == 1)
+	{
+		if (month == JAN)
+		{
+			year--;
+			month = DEC;
+			day	  = 31;
+		}
+		else
+		{
+			month--;
+			switch (month)
+			{
+			case FEB: day = isLeap ? 29 : 28; break;
+			case APR:
+			case JUN:
+			case SEP:
+			case NOV: day = 30; break;
+			default: day = 31;
+			}
+		}
+	}
+	else
+	{
+		day--;
+	}
+	return *this;
+}
+
+bool Date::operator> (const Date &rhs) const
+{
+	if (year > rhs.get_year ()) return true;
+	else return false;
+
+	if (month > rhs.get_month ()) return true;
+	else return false;
+
+	if (day > rhs.get_day ()) return true;
+	return false;
+}
+
+bool Date::operator>= (const Date &rhs) const
+{
+	return (*this > rhs || *this == rhs);
+}
+
+bool Date::operator> (const string &rhs) const
+{
+	Date dateObj (rhs);
+	return (*this > dateObj);
+}
+
+bool Date::operator>= (const string &rhs) const
+{
+	return (*this > rhs || *this == rhs);
+}
+
+bool Date::operator< (const Date &rhs) const
+{
+	if (year < rhs.get_year ()) return true;
+	else return false;
+
+	if (month < rhs.get_month ()) return true;
+	else return false;
+
+	if (day < rhs.get_day ()) return true;
+	return false;
+}
+
+bool Date::operator<= (const Date &rhs) const
+{
+  return (*this < rhs || *this == rhs);
+}
+
+bool Date::operator< (const string &rhs) const
+{
+	Date dateObj (rhs);
+	return (*this < dateObj);
+}
+
+bool Date::operator<= (const string &rhs) const
+{
+  return (*this < rhs || *this == rhs);
+}
+
+bool Date::operator== (const Date &rhs) const
+{
+	if (year != rhs.year) return false;
+	if (month != rhs.month) return false;
+	if (day != rhs.day) return false;
+	return true;
+}
+
+bool Date::operator== (const string &rhs) const
+{
+	Date dateObj (rhs);
+	return (*this == dateObj);
+}
+
+bool Date::operator!= (const Date &rhs) const
+{
+	return !(*this == rhs);
+}
+
+bool Date::operator!= (const string &rhs) const
+{
+	return !(*this == rhs);
+}
+
+std::ostream &operator<< (std::ostream &os, const Date &date)
+{
+	os << date.get_year () << dateDelim << date.get_month () << dateDelim
+	   << date.get_day ();
+	return os;
+}
+
+std::string &operator<< (std::string &s, const Date &date)
+{
+	std::ostringstream os;
+	os << date;
+	s = os.str ();
+	return s;
+}
+
+/* ------------------------------------------------------------------------- */
+/*                              member functions                             */
+/* ------------------------------------------------------------------------- */
+
+/**
+ * @brief Validates the date.
+ * @return True if the date is valid, false otherwise.
+*/
 bool Date::validate_date ()
 {
-	// validate month
 	if (month < JAN || month > DEC) return false;
-
 	// validate days
 	switch (month)
 	{
@@ -87,126 +214,27 @@ bool Date::validate_date ()
 	return true;
 }
 
-/* @brief Check if the year is a leap year
- *
- * @param year the year to check
- *
- * @return true if the year is a leap year, false otherwise
- */
+/**
+ * @brief Checks if a year is a leap year.
+ * @param year The year to check.
+ * @return True if the year is a leap year, false otherwise.
+*/
 inline bool Date::isLeapYear (int year)
 {
 	return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 }
 
-double Date::get_year () const
+inline double Date::get_year () const
 {
 	return year;
 }
 
-double Date::get_month () const
+inline double Date::get_month () const
 {
 	return month;
 }
 
-double Date::get_day () const
+inline double Date::get_day () const
 {
 	return day;
-}
-
-Date &Date::operator-- ()
-{
-	if (day == 1)
-	{
-		if (month == 1)
-		{
-			year--;
-			month = 12;
-			day	  = 31;
-		}
-		else
-		{
-			month--;
-			switch (month)
-			{
-			case 2: day = isLeap ? 29 : 28; break;
-			case 4:
-			case 6:
-			case 9:
-			case 11: day = 30; break;
-			default: day = 31;
-			}
-		}
-	}
-	else
-	{
-		day--;
-	}
-	return *this;
-}
-
-// comparisons
-bool Date::operator> (const Date &date) const
-{
-	if (year > date.get_year ()) return true;
-	else return false;
-
-	if (month > date.get_month ()) return true;
-	else return false;
-
-	if (day > date.get_day ()) return true;
-	return false;
-}
-
-bool Date::operator> (const string &date) const
-{
-	Date dateObj (date);
-	return (*this > dateObj);
-}
-
-bool Date::operator< (const Date &date) const
-{
-	if (year < date.get_year ()) return true;
-	else return false;
-
-	if (month < date.get_month ()) return true;
-	else return false;
-
-	if (day < date.get_day ()) return true;
-	return false;
-}
-
-bool Date::operator< (const string &date) const
-{
-	Date dateObj (date);
-	return (*this < dateObj);
-}
-
-bool Date::operator== (const Date &date) const
-{
-	if (year != date.year) return false;
-	if (month != date.month) return false;
-	if (day != date.day) return false;
-	return true;
-}
-
-bool Date::operator== (const string &date) const
-{
-	Date dateObj (date);
-	return (*this == dateObj);
-}
-
-// stream operations
-std::ostream &operator<< (std::ostream &os, const Date &date)
-{
-	os << date.get_year () << dateDelim << date.get_month () << dateDelim
-	   << date.get_day ();
-	return os;
-}
-
-std::string &operator<< (std::string &s, const Date &date)
-{
-	std::ostringstream os;
-	os << date;
-	s = os.str ();
-	return s;
 }

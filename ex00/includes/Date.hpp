@@ -1,5 +1,4 @@
 #include <ostream>
-#include <sstream>
 #include <string>
 
 #ifndef DATE_HPP
@@ -25,6 +24,13 @@ enum
 
 static const char dateDelim = '-';
 
+/**
+ * @class Date
+ * @brief Represents a date.
+ *
+ * The Date class provides functionality to work with dates, including
+ * comparison operators and access to individual components of a date.
+ */
 class Date
 {
 public:
@@ -33,27 +39,36 @@ public:
 	Date (const Date &);
 	Date &operator= (const Date &);
 
-	Date &operator-- ();
-	bool  operator> (const Date &date) const;
-	bool  operator> (const string &date) const;
-	bool  operator< (const Date &date) const;
-	bool  operator< (const string &date) const;
-	bool  operator== (const Date &date) const;
-	bool  operator== (const string &date) const;
-
-	double get_year () const;
-	double get_month () const;
-	double get_day () const;
+	/* --------------------------- operator overload -------------------------- */
+	Date		 &operator-- ();
+	bool		  operator> (const Date &rhs) const;
+	bool		  operator>= (const Date &rhs) const;
+	bool		  operator> (const string &rhs) const;
+	bool		  operator>= (const string &rhs) const;
+	bool		  operator< (const Date &rhs) const;
+	bool		  operator<= (const Date &rhs) const;
+	bool		  operator< (const string &rhs) const;
+	bool		  operator<= (const string &rhs) const;
+	bool		  operator== (const Date &rhs) const;
+	bool		  operator== (const string &rhs) const;
+	bool		  operator!= (const Date &rhs) const;
+	bool		  operator!= (const string &rhs) const;
+	/* -------------------------------- getters ------------------------------- */
+	inline double get_year () const;
+	inline double get_month () const;
+	inline double get_day () const;
 
 private:
 	bool		validate_date ();
 	inline bool isLeapYear (int year);
-	bool		isLeap;
-	int			year;
-	int			month;
-	int			day;
+
+	bool isLeap;
+	int	 year;
+	int	 month;
+	int	 day;
 };
 
+/* ---------------------------- stream overload ---------------------------- */
 std::ostream &operator<< (std::ostream &os, const Date &date);
 std::string	 &operator<< (std::string &s, const Date &date);
 
