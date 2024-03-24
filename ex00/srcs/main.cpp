@@ -15,7 +15,7 @@ int main (int argc, char **argv)
 	binance.process();
 
 #ifdef DEBUG
-  binance.print_priceMap();
+  // binance.print_priceMap();
 #endif // DEBUG
   return 0;
 }
