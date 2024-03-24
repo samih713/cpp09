@@ -34,6 +34,7 @@ static const char dateDelim = '-';
 class Date
 {
 public:
+	Date ();
 	Date (const string &date);
 	~Date ();
 	Date (const Date &);
@@ -57,6 +58,7 @@ public:
 	inline double get_year () const;
 	inline double get_month () const;
 	inline double get_day () const;
+	string to_string ();
 
 private:
 	bool		validate_date ();
