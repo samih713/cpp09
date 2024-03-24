@@ -4,10 +4,20 @@
 using std::istringstream;
 using std::runtime_error;
 
+/* ------------------------------------------------------------------------- */
+/*                          construction/destruction                         */
+/* ------------------------------------------------------------------------- */
+
 /**
- * @brief Constructs a Date object with the specified date.
- * @param date The date in the format "YYYY-MM-DD".
-*/
+ * @brief Constructs a Date object from a string representation of a date.
+ *
+ * The string should be in the format "YYYY/MM/DD", where YYYY represents the year,
+ * MM represents the month, and DD represents the day. The constructor parses the
+ * string and initializes the Date object with the corresponding year, month, and day.
+ *
+ * @param date The string representation of the date.
+ * @throws std::runtime_error If the string format is invalid or the date is not valid.
+ */
 Date::Date (const string &date) : isLeap (false), year (0), month (0), day (0)
 {
 	istringstream dateStream (date);
@@ -30,6 +40,10 @@ Date::Date (const string &date) : isLeap (false), year (0), month (0), day (0)
 		throw runtime_error ("(validation) Invalid date format");
 }
 
+Date::Date () : isLeap (false), year (0), month (0), day (0)
+{
+}
+
 Date::~Date ()
 {
 }
@@ -50,7 +64,73 @@ Date &Date::operator= (const Date &other)
 	return *this;
 }
 
+/* ------------------------------------------------------------------------- */
+/*                              member functions                             */
+/* ------------------------------------------------------------------------- */
 
+/**
+ * @brief Validates the date.
+ * @return True if the date is valid, false otherwise.
+*/
+bool Date::validate_date ()
+{
+	if (month < JAN || month > DEC) return false;
+	// validate days
+	switch (month)
+	{
+	case FEB:
+	{
+		if (isLeap && day > 29) return false;
+		if (!isLeap && day > 28) return false;
+		break;
+	}
+	case APR:
+	case JUN:
+	case SEP:
+	case NOV:
+		if (day > 30) return false;
+		break;
+	default: // rest
+		if (day > 31) return false;
+	}
+	return true;
+}
+
+/**
+ * @brief Checks if a year is a leap year.
+ * @param year The year to check.
+ * @return True if the year is a leap year, false otherwise.
+*/
+inline bool Date::isLeapYear (int year)
+{
+	return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+}
+
+/* ------------------------------------------------------------------------- */
+/*                                  getters                                  */
+/* ------------------------------------------------------------------------- */
+
+inline double Date::get_year () const
+{
+	return year;
+}
+
+inline double Date::get_month () const
+{
+	return month;
+}
+
+inline double Date::get_day () const
+{
+	return day;
+}
+
+string Date::to_string ()
+{
+	string s;
+	s << *this;
+	return s;
+}
 
 /* ------------------------------------------------------------------------- */
 /*                             operator overload                             */
@@ -90,12 +170,14 @@ Date &Date::operator-- ()
 bool Date::operator> (const Date &rhs) const
 {
 	if (year > rhs.get_year ()) return true;
-	else return false;
+	else if (year < rhs.get_year()) return false;
 
 	if (month > rhs.get_month ()) return true;
-	else return false;
+	else if (month < rhs.get_month()) return false;
 
 	if (day > rhs.get_day ()) return true;
+	else if (day < rhs.get_day()) return false;
+
 	return false;
 }
 
@@ -118,12 +200,14 @@ bool Date::operator>= (const string &rhs) const
 bool Date::operator< (const Date &rhs) const
 {
 	if (year < rhs.get_year ()) return true;
-	else return false;
+	else if (year > rhs.get_year()) return false;
 
 	if (month < rhs.get_month ()) return true;
-	else return false;
+	else if (month > rhs.get_month()) return false;
 
 	if (day < rhs.get_day ()) return true;
+	else if (day > rhs.get_day()) return false;
+
 	return false;
 }
 
@@ -182,59 +266,3 @@ std::string &operator<< (std::string &s, const Date &date)
 	return s;
 }
 
-/* ------------------------------------------------------------------------- */
-/*                              member functions                             */
-/* ------------------------------------------------------------------------- */
-
-/**
- * @brief Validates the date.
- * @return True if the date is valid, false otherwise.
-*/
-bool Date::validate_date ()
-{
-	if (month < JAN || month > DEC) return false;
-	// validate days
-	switch (month)
-	{
-	case FEB:
-	{
-		if (isLeap && day > 29) return false;
-		if (!isLeap && day > 28) return false;
-		break;
-	}
-	case APR:
-	case JUN:
-	case SEP:
-	case NOV:
-		if (day > 30) return false;
-		break;
-	default: // rest
-		if (day > 31) return false;
-	}
-	return true;
-}
-
-/**
- * @brief Checks if a year is a leap year.
- * @param year The year to check.
- * @return True if the year is a leap year, false otherwise.
-*/
-inline bool Date::isLeapYear (int year)
-{
-	return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-}
-
-inline double Date::get_year () const
-{
-	return year;
-}
-
-inline double Date::get_month () const
-{
-	return month;
-}
-
-inline double Date::get_day () const
-{
-	return day;
-}
