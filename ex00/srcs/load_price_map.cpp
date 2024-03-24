@@ -4,30 +4,22 @@
 #include <stdexcept>
 #include <utility>
 
-using std::ifstream;
 using std::istringstream;
 using std::runtime_error;
 
-void BitcoinExchange::load_price_map (const char *priceDBFile)
-{
-	const string	headerLine ("date,exchange_rate");
-	static ifstream priceDB (priceDBFile, std::ios_base::in);
 
-	if (!priceDB.good ())
-		throw runtime_error ("Failed to open price database");
+
+void BitcoinExchange::load_price_map ()
+{
 
 	string line;
 	string date;
 	double price;
 	size_t comma;
 
-	std::pair<pmap::iterator, bool> ret;
+	std::pair<price_m::iterator, bool> ret;
 
-	std::getline (priceDB, line);
-	if (line != headerLine)
-    throw runtime_error("Invalid header line");
-
-	while (std::getline (priceDB, line)) // get the line
+	while (std::getline (*priceDB, line)) // get the line
 	{
 		comma = line.find_first_of (" , ", 0);
 		if (comma == string::npos)

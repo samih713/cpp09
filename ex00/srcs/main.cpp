@@ -11,8 +11,7 @@ int main (int argc, char **argv)
 		return -1;
 	}
 	const char *inputFile = argv[1];
-	BitcoinExchange binance(priceDBFile); // i am sure that object is in a valid state
-	binance.load_input_file(inputFile);
+	BitcoinExchange binance(priceDBFile, inputFile);
 	binance.process();
 
 #ifdef DEBUG
