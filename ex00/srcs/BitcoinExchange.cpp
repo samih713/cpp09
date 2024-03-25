@@ -45,6 +45,10 @@ BitcoinExchange::~BitcoinExchange ()
 /*                              member functions                             */
 /* ------------------------------------------------------------------------- */
 
+#define PRINT_ERR(msg) (cerr << (msg) << endl)
+#define PRINT_OUT(it, priceIt)                                            \
+	(cout << (it)->second.first << " => " << (it)->second.second << " = " \
+		  << (it)->second.second * (priceIt)->second << endl)
 /**
  * @brief Process the input data and calculate the total value of each transaction.
  * The function iterates over the inputMap and for each transaction, it checks if there is a
@@ -57,45 +61,39 @@ void BitcoinExchange::process ()
 {
 	input_m::iterator begin = inputMap.begin ();
 	input_m::iterator end	= inputMap.end ();
-
-	string date;
+	price_m::iterator priceIt;
 
 	for (input_m::iterator it = begin; it != end; it++)
 	{
 		if (ISERROR (it->first))
 		{
-			cerr << inputErrorMap[it->first] << endl;
+			PRINT_ERR (inputErrorMap[it->first]);
 			continue;
 		}
 
-		price_m::iterator priceIt = priceMap.find (it->second.first);
+		priceIt = priceMap.find (it->second.first);
 		if (priceIt == priceMap.end ())
 		{
 			Date dateObj (it->second.first);
-			if ((--priceMap.end ())->first < dateObj) priceIt = --priceMap.end ();
-			else
+			if ((--priceMap.end ())->first < dateObj)
 			{
-				while (priceIt == priceMap.end ())
-				{
-					date << --dateObj;
-					priceIt = priceMap.find (date);
-				}
+				priceIt = --priceMap.end ();
 			}
-			cout << it->second.first << " => " << it->second.second << " = "
-				 << it->second.second * priceIt->second << endl;
+			while (priceIt == priceMap.end ())
+			{
+				priceIt = priceMap.find (--dateObj);
+			}
 		}
-		else
-			cout << it->second.first << " => " << it->second.second << " = "
-				 << it->second.second * priceIt->second << endl;
+		PRINT_OUT (it, priceIt);
 	}
 }
 
 /**
  * @brief Loads a file and checks the header line.
  *
- * This function opens a file specified by the fileName parameter and checks if the header line
- * matches the provided headerLine parameter. If the file fails to open or the header line is
- * invalid, a runtime_error exception is thrown.
+ * This function opens a file specified by the fileName parameter and checks if
+ * the header line matches the provided headerLine parameter. If the file fails to
+ * open or the header line is invalid, a runtime_error exception is thrown.
  *
  * @param fileName The name of the file to be loaded.
  * @param headerLine The expected header line of the file.
@@ -109,11 +107,16 @@ ifstream *BitcoinExchange::load_file (const char *fileName, const string &header
 	ifstream *dataBase = new ifstream;
 	dataBase->open (fileName, std::ios_base::in);
 
-	if (!dataBase->good ()) throw runtime_error ("Failed to open " + string (fileName) + " .");
+	if (!dataBase->good ())
+	{
+		throw runtime_error ("Failed to open " + string (fileName) + " .");
+	}
 
 	std::getline (*dataBase, _headerLine);
 	if (_headerLine != headerLine)
+	{
 		throw runtime_error (string (fileName) + " : Invalid header line");
+	}
 
 	return dataBase;
 }
