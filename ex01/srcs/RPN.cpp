@@ -1,23 +1,13 @@
 #include "RPN.hpp"
 
-RPN::RPN()
+RPN::RPN (const string &exp) : exp (exp), _fnum (0), _snum (0)
 {
-	// constructor code
 }
 
-RPN::~RPN()
+RPN::~RPN ()
 {
-	// destructor code
 }
 
-RPN::RPN(const RPN &other)
+RPN::RPN (const RPN &other) : exp (other.exp), _fnum (other._fnum), _snum (other._snum)
 {
-  (void)other;
-}
-
-RPN &RPN::operator=(const RPN &other)
-{
-  (void)other;
-
-  return *this;
 }
