@@ -17,7 +17,7 @@ DEPFLAGS:= -MMD -MP
 DEPS_DIR:=deps
 DEPS:=*/*.d
 
-CHECKS:= cppcoreguidelines-*,readability-*,bugprone-copy-constructor-init
+CHECKS:= cppcoreguidelines-*,readability-*,bugprone-*
 
 all: $(NAME)
 
@@ -31,7 +31,7 @@ sanitize: CXXFLAGS += $(DEBUG_FLAGS) -fsanitize=address
 sanitize: run
 
 tidy: $(addprefix $(SRCS_DIR), $(SRCS))
-	clang-tidy $^ -checks='$(CHECKS)' -- $(CXXFLAGS) $(INCLUDES)
+	clang-tidy $^ -checks='$(CHECKS)' -header-filter=.* -- $(CXXFLAGS) $(INCLUDES)
 
 $(NAME): $(OBJS)
 	@$(CXX) $(CXXFLAGS) $(DEPFLAGS) $(INCLUDES) -o $@ $^
