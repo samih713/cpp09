@@ -1,5 +1,6 @@
 #include "RPN.hpp"
 
+
 /**
  * Evaluates the Reverse Polish Notation (RPN) expression stored in the `exp`
  * member variable.
@@ -18,6 +19,15 @@ double RPN::evaluate ()
 	{
 		if (is_number (entry))
 		{
+			iss >> std::noskipws;
+			char ws = iss.get();
+			if (ws != ' ')
+				throw runtime_error ("Invalid expression");
+			else
+			{
+				iss.putback (ws);
+				iss >> std::skipws;
+			}
 			numStk.push (TO_INT (entry));
 		}
 		else if (is_operand (entry))
