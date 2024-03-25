@@ -1,0 +1,38 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Werror",
+      "-Wextra",
+      "-std=c++98",
+      "-O3",
+      "-I./includes",
+      "-c",
+      "-o",
+      "objs/main.o",
+      "srcs/main.cpp"
+    ],
+    "directory": "/home/eva-1/42/cpp/cpp09/ex01",
+    "file": "/home/eva-1/42/cpp/cpp09/ex01/srcs/main.cpp",
+    "output": "/home/eva-1/42/cpp/cpp09/ex01/objs/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Werror",
+      "-Wextra",
+      "-std=c++98",
+      "-O3",
+      "-I./includes",
+      "-c",
+      "-o",
+      "objs/RPN.o",
+      "srcs/RPN.cpp"
+    ],
+    "directory": "/home/eva-1/42/cpp/cpp09/ex01",
+    "file": "/home/eva-1/42/cpp/cpp09/ex01/srcs/RPN.cpp",
+    "output": "/home/eva-1/42/cpp/cpp09/ex01/objs/RPN.o"
+  }
+]

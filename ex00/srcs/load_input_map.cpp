@@ -23,8 +23,7 @@ using std::runtime_error;
 void BitcoinExchange::load_input_map ()
 {
 	string		 line;
-	string		 date;
-	double		 value;
+	double		 value (0);
 	loc			 delimiterPos;
 	const string delimiter	= " | ";
 	size_t		 lineNumber = 1;
