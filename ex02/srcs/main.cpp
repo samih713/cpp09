@@ -1,60 +1,42 @@
-// #include "PmergeMe.hpp"
+#include "PmergeMe.hpp"
 #include <algorithm>
 #include <iostream>
 #include <list>
 
-using std::list;
-
+using std::cerr;
 using std::cout;
 using std::endl;
+using std::list;
 
-typedef list<double> _list;
+void   printlist_d(int_list_t l);
+double Random();
 
-_list merge_sort_seconds (_list &pairs)
+int main()
 {
-	// recursion end
-	if (pairs.size () == 1)
+    int_list_t a(3000);
+    int_list_t b;
+
+    std::generate(a.begin(), a.end(), Random);
+    b = PmergeMe::FJMI(a);
+	if (std::is_sorted(b.begin(), b.end()))
 	{
-		return pairs;
+		cout << "sorted" << endl;
 	}
-	// find half the list
-	int				mid	 = pairs.size () / 2;
-	_list::iterator half = pairs.begin ();
-	std::advance (half, mid);
-
-	_list left (pairs.begin (), half);
-	_list right (half, pairs.end ());
-
-	merge_sort_seconds (left);
-	merge_sort_seconds (right);
-
-	pairs.clear ();
-	std::merge (
-		left.begin (), left.end (), right.begin (), right.end (), std::back_inserter (pairs));
-	return pairs;
+	else
+	{
+		cerr << "not sorted" << endl;
+	}
+    return 0;
 }
 
-void   print_list (_list l);
-double Random ()
+void printlist_d(int_list_t l)
 {
-	return std::rand () % 100;
+    for (int_list_t::iterator it = l.begin(); it != l.end(); it++)
+        cout << *it << " ";
+    cout << endl;
 }
 
-int main ()
+double Random()
 {
-	_list a (50);
-	std::generate (a.begin (), a.end (), Random);
-
-	print_list (a);
-
-	merge_sort_seconds (a);
-
-	print_list (a);
-}
-
-void print_list (_list l)
-{
-	for (_list::iterator it = l.begin (); it != l.end (); it++)
-		cout << *it << " ";
-	cout << endl;
+    return std::rand() % 100;
 }

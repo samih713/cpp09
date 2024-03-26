@@ -16,6 +16,23 @@
     "file": "/home/eva-1/42/cpp/cpp09/ex02/srcs/PmergeMe.cpp",
     "output": "/home/eva-1/42/cpp/cpp09/ex02/objs/PmergeMe.o"
   },
+	{
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Werror",
+      "-Wextra",
+      "-std=c++98",
+      "-I./includes",
+      "-c",
+      "-o",
+      "objs/FJMI.o",
+      "srcs/FJMI.cpp"
+    ],
+    "directory": "/home/eva-1/42/cpp/cpp09/ex02",
+    "file": "/home/eva-1/42/cpp/cpp09/ex02/srcs/FJMI.cpp",
+    "output": "/home/eva-1/42/cpp/cpp09/ex02/objs/FJMI.o"
+  },
   {
     "arguments": [
       "/usr/bin/c++",

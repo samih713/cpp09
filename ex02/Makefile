@@ -1,5 +1,5 @@
 NAME:= PmergeMe
 
-SRCS:= PmergeMe.cpp main.cpp
+SRCS:= PmergeMe.cpp FJMI.cpp main.cpp
 
 -include ../.commonmakefile
