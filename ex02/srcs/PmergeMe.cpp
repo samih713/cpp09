@@ -1,55 +1,91 @@
 #include "PmergeMe.hpp"
 #include <algorithm>
-#include <list>
 #include <cassert>
+#include <iterator>
+#include <utility>
 
-PmergeMe::PmergeMe()
+using std::list;
+using std::pair;
+
+typedef list<pair<double, double> > _list;
+
+PmergeMe::PmergeMe ()
 {
 }
 
-PmergeMe::~PmergeMe()
+PmergeMe::~PmergeMe ()
 {
 }
 
-PmergeMe::PmergeMe(const PmergeMe &other)
+PmergeMe::PmergeMe (const PmergeMe &other)
 {
+	(void)other;
 }
 
-PmergeMe &PmergeMe::operator=(const PmergeMe &other)
+PmergeMe &PmergeMe::operator= (const PmergeMe &other)
 {
+	(void)other;
+	return *this;
 }
 
-void sort_second(std::list<std::pair<double, double>> &pairs)
+
+
+void merge_sort_seconds (_list &pairs)
 {
-	
+  list<double> sorted(0);
+	// recursion end
+	if (pairs.size () == 1)
+	{
+		return ;
+	}
+  // find half the list
+  int mid = pairs.size() / 2;
+	_list::iterator half = pairs.begin ();
+  std::advance(half, mid);
+
+	_list			left (pairs.begin (), half);
+	_list			right (half, pairs.end());
+
+	merge_sort_seconds (left);
+	merge_sort_seconds (right);
+
+  pairs.clear();
+  std::merge(left.begin(), left.end(), right.begin(), right.end(), std::back_inserter(pairs));
 }
 
-static FJMI(std::list &list)
+void PmergeMe::FJMI (list<int> &l)
 {
 	// determine if size is even or odd
-	double straggler(0);
-	// if odd, save the last element
-	if (list.size() % 2 != 0)
+	pair<bool, double> straggler = std::make_pair (false, 0);
+	if (l.size () % 2 != 0)
 	{
-		straggler = list.back();
-		list.pop_back();
-		assert(list.size() % 2 == 0 && "list size should be even");
+		// if odd, save the last element
+		straggler.second = l.back ();
+		straggler.first	 = true;
+		l.pop_back ();
+		assert (l.size () % 2 == 0 && "list size should be even");
 	}
+
 	// split the numbers into pairs
-	std::list<std::pair<double, double>> pairs;
-	while (!list.empty())
+	list<pair<double, double> > pairs;
+	while (!l.empty ())
 	{
 		// remove 1 element from the front of the list
-		double a = list.front();
-		list.pop_front();
+		double a = l.front ();
+		l.pop_front ();
 		// remove 2nd element
-		double b = list.front();
-		list.pop_front();
+		double b = l.front ();
+		l.pop_front ();
 		// a should be less than b, if not swap
-		if (a > b)
-			std::swap(a, b);
-		pairs.push_back(std::make_pair(a, b));
+		if (a > b) std::swap (a, b);
+		pairs.push_back (std::make_pair (a, b));
 	}
-	// sort list recursively by its 2nd element
-	sort_second(pairs);
+
+	// recursively merge
+  merge_sort_seconds(pairs);
+	// if straggler was added, push it to the pairs
+	if (straggler.first)
+	{
+		l.push_back (straggler.second);
+	}
 }

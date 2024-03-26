@@ -1,0 +1,36 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Werror",
+      "-Wextra",
+      "-std=c++98",
+      "-I./includes",
+      "-c",
+      "-o",
+      "objs/PmergeMe.o",
+      "srcs/PmergeMe.cpp"
+    ],
+    "directory": "/home/eva-1/42/cpp/cpp09/ex02",
+    "file": "/home/eva-1/42/cpp/cpp09/ex02/srcs/PmergeMe.cpp",
+    "output": "/home/eva-1/42/cpp/cpp09/ex02/objs/PmergeMe.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Werror",
+      "-Wextra",
+      "-std=c++98",
+      "-I./includes",
+      "-c",
+      "-o",
+      "objs/main.o",
+      "srcs/main.cpp"
+    ],
+    "directory": "/home/eva-1/42/cpp/cpp09/ex02",
+    "file": "/home/eva-1/42/cpp/cpp09/ex02/srcs/main.cpp",
+    "output": "/home/eva-1/42/cpp/cpp09/ex02/objs/main.o"
+  }
+]

@@ -1,3 +1,5 @@
+#include <list>
+
 #ifndef PMERGEME_HPP
 #define PMERGEME_HPP
 // split the numbers into pairs
@@ -16,10 +18,11 @@ class PmergeMe
 {
 
 public:
-	PmergeMe();
-	~PmergeMe();
-	PmergeMe(const PmergeMe &other);
-	PmergeMe &operator=(const PmergeMe &other);
+	PmergeMe ();
+	~PmergeMe ();
+	PmergeMe (const PmergeMe &other);
+	PmergeMe   &operator= (const PmergeMe &other);
+	static void FJMI (std::list<int> &list);
 };
 
 #endif // PMERGEME_HPP
