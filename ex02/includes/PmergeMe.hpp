@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include <iterator>
 #include <list>
 #include <sstream>
@@ -46,10 +47,10 @@ I PmergeMe<I, P>::fill_up_list(char **argv, int size)
 	int entry(-1);
 	for (int i = 0; i < size; i++)
 	{
-		if (std::string(argv[i]) == "-0")
-		{
-			throw std::runtime_error("Error: invalid input");
-		}
+		// if (std::string(argv[i]) == "-0")
+		// {
+		// 	throw std::runtime_error("Error: invalid input");
+		// }
 
 		std::istringstream iss((std::string(argv[i])));
 		iss >> entry;
@@ -70,8 +71,8 @@ I PmergeMe<I, P>::FJMI(I &numbers)
 {
     straggler_t straggler = find_straggler(numbers);
 
-    P pairs;
-    P sorted_pairs;
+    P pairs(0);
+    P sorted_pairs(0);
 
     I sorted(0);
 
@@ -86,13 +87,13 @@ I PmergeMe<I, P>::FJMI(I &numbers)
             std::swap(a, b);
         pairs.push_back(std::make_pair(a, b));
     }
-    // recursively merge sort the pairs
-    sorted_pairs = merge_sort_seconds(pairs);
-    // extract the largest elements
-    sorted = extract_largest(sorted_pairs);
-    // insert the smallest elements
-    insert_smallest(sorted_pairs, sorted);
-    // if straggler was added, push it to the pairs
+	if (!pairs.empty())
+	{
+		sorted_pairs = merge_sort_seconds(pairs);
+		sorted = extract_largest(sorted_pairs);
+		insert_smallest(sorted_pairs, sorted);
+		// if straggler was added, push it to the pairs
+	}
     if (straggler.first)
     {
         typename I::iterator insert_position =

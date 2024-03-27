@@ -26,22 +26,27 @@ int main(int argc, char **argv)
     {
 		std::cout.setf (std::ios_base::adjustfield, std::ios_base::left);
 		// start list timer
+		double start_list = clock();
         list<int> _list = PmergeMe<list<int>, list<pair<int, int> > >::fill_up_list(argv + 1, argc - 1);
-		cout << std::setw(15) << "Un-Sorted: ";
-		print(_list);
+		list<int> temp = _list;
         list<int> sorted_list = PmergeMe<std::list<int>, std::list<std::pair<int, int> > >::FJMI(_list);
 		// end list timer
-		cout << std::setw(15) << "Sorted: ";
-		print(sorted_list);
+		double duration_list = clock() - start_list;
+
 
 		// start list timer
+		double start_deque = clock();
         deque<int> _deque = PmergeMe<deque<int>, deque<pair<int, int> > >::fill_up_list(argv + 1, argc - 1);
-		cout << std::setw(15) << "Un-Sorted: ";
-		print(_deque);
         deque<int> sorted_deque = PmergeMe<deque<int>, deque<pair<int, int> > >::FJMI(_deque);
 		// end list timer
+		double duration_deque = clock() - start_deque;
+
+		cout << std::setw(15) << "Un-Sorted: ";
+		print(temp);
 		cout << std::setw(15) << "Sorted: ";
-		print(sorted_deque);
+		print(sorted_list);
+		cout << "Time to process a range of " << temp.size() << " elements with std::list : " << duration_list << " ms" << endl;
+		cout << "Time to process a range of " << temp.size() << " elements with std::deque : " << duration_deque << " ms" << endl;
     }
 	catch (std::runtime_error &e)
 	{
